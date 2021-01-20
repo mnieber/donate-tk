@@ -1,0 +1,7 @@
+$paymentFormBGColor: hsl(40, 35%, 93%);
+
+.CarouselView {
+  @apply border border-solid rounded text-base;
+  @apply py-4;
+  background-color: $paymentFormBGColor;
+}

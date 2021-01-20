@@ -1,0 +1,15 @@
+FROM python:3
+
+# install dev pkg dependencies
+RUN apt-get update && apt-get install -y \
+    fish                 `# via :fish` \
+    make                 `# via :makefile`
+
+# install dev pip dependencies
+RUN pip install \
+    isort                `# via :isort` \
+    pip-tools            `# via :pip-compile`
+
+RUN pip install --upgrade pip
+
+WORKDIR /app/src

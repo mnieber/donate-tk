@@ -1,0 +1,22 @@
+@mixin Label() {
+  @apply border rounded-md border-solid;
+  @apply px-2;
+  @apply h-8;
+}
+
+@mixin BigLabel() {
+  @apply border rounded-md border-solid;
+  @apply px-3;
+  @apply h-12;
+}
+
+@mixin BigField() {
+  @include BigLabel();
+  @apply text-black-modest;
+}
+
+@mixin BigButton() {
+  @apply border rounded-md border-solid;
+  @apply px-3;
+  @apply h-12;
+}

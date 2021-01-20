@@ -1,0 +1,25 @@
+@import '/src/donations/scss/boxes.scss';
+
+.FirstNameField {
+  @include BigField();
+  @apply rounded-r-none;
+  @apply border-blue-200;
+  @apply w-48;
+}
+
+.LastNameField {
+  @include BigField();
+  @apply border-l-0 rounded-l-none;
+  @apply border-blue-200;
+  @apply w-48;
+}
+
+.EmailField {
+  @include BigField();
+  @apply border-blue-200;
+  @apply w-96;
+}
+
+.FieldError {
+  @apply text-red-400 text-xs;
+}

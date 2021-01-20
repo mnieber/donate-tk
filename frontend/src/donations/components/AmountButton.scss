@@ -1,0 +1,16 @@
+@import '/src/donations/scss/modifiers.scss';
+@import '/src/donations/scss/boxes.scss';
+
+.AmountButton {
+  @include BigField();
+  @apply border-blue-200;
+  @apply w-32;
+}
+
+.AmountButton--notSelected:hover {
+  @apply bg-white;
+}
+
+.AmountButton--selected {
+  @include __selected();
+}

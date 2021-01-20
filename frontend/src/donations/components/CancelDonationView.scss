@@ -1,0 +1,15 @@
+@import '/src/donations/scss/boxes.scss';
+
+.CancelDonationView {
+  @apply text-base;
+
+  h1 {
+    @apply text-lg;
+  }
+}
+
+.CancelDonationView__CancelButton {
+  @include BigButton();
+  @apply bg-white text-blue-300 border-blue-200;
+  @apply font-bold text-xl;
+}

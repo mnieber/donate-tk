@@ -1,0 +1,42 @@
+version: "3.7"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    depends_on: []
+    image: donatetk_backend_dev
+    environment:
+      - DJANGO_SETTINGS_MODULE=app.settings.dev
+      - DONATETK_WEBPAGE_HOST=http://localhost:3000
+      - DONATETK_STRIPE_TEST_PUBLIC_KEY=
+      - DONATETK_STRIPE_TEST_SECRET_KEY=
+      - DONATETK_STRIPE_LIVE_PUBLIC_KEY=
+      - DONATETK_STRIPE_LIVE_SECRET_KEY=
+      - DONATETK_STRIPE_ENDPOINT_SECRET=
+      - DONATETK_STRIPE_LIVE_MODE=false
+    ports:
+      - 8000:8000
+    volumes:
+      - backend_site_packages:/usr/local/lib/python3.9/site-packages
+      - backend_usr_local_bin:/usr/local/bin
+      - ./backend:/app/src
+    command: make install runserver
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    depends_on: []
+    image: donatetk_frontend_dev
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - REACT_APP_DONATIONS_API_HOST=http://localhost:8000
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend:/app/src
+    command: yarn start
+volumes:
+  backend_site_packages:
+  backend_usr_local_bin:

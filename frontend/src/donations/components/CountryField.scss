@@ -1,0 +1,11 @@
+@import '/src/donations/scss/boxes.scss';
+
+.CountryField {
+  select {
+    @include BigField();
+    @apply px-2 rounded-t-none;
+    @apply bg-white border-blue-200;
+    @apply w-full;
+  }
+  @apply w-96;
+}

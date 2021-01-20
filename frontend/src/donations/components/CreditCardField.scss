@@ -1,0 +1,25 @@
+@import '/src/donations/scss/boxes.scss';
+
+.CreditCardNumber {
+  @include BigField();
+  @apply border-blue-200;
+  @apply border-r-0 rounded-r-none;
+}
+
+.CreditCardExpireField {
+  @include BigField();
+  @apply px-0 border-l-0 border-r-0 rounded-l-none rounded-r-none;
+  @apply border-blue-200;
+  @apply w-8 pl-1;
+}
+
+.CreditCardSecurityCode {
+  @include BigField();
+  @apply px-0 border-l-0 rounded-l-none;
+  @apply border-blue-200;
+  @apply w-8 pl-1;
+}
+
+.CreditCardSecurityCode--hidden {
+  @apply text-white;
+}

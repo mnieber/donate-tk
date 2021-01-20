@@ -1,0 +1,27 @@
+@import '/src/donations/scss/boxes.scss';
+
+.EditCardLink {
+  @include Label();
+  @apply border-blue-200;
+}
+
+.StreetField {
+  @include BigField();
+  @apply rounded-b-none;
+  @apply border-blue-200;
+  @apply w-96;
+}
+
+.CityField {
+  @include BigField();
+  @apply rounded-none;
+  @apply border-blue-200;
+  @apply w-48;
+}
+
+.ZipCodeField {
+  @include BigField();
+  @apply rounded-none;
+  @apply border-blue-200;
+  @apply w-48;
+}

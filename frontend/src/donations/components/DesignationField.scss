@@ -1,0 +1,15 @@
+@import '/src/donations/scss/boxes.scss';
+
+.DesignationField {
+  @include Label();
+  @apply w-full;
+  @apply border-blue-200 bg-gray-200;
+
+  select {
+    @apply h-8 text-black-modest bg-gray-200;
+  }
+
+  select:focus {
+    outline: 1px dashed transparent;
+  }
+}

@@ -1,0 +1,20 @@
+@import '/src/donations/scss/boxes.scss';
+
+.DonateButton {
+  @include BigButton();
+  @apply bg-white text-blue-300 border-blue-200;
+  @apply font-bold text-xl;
+}
+
+.DonateButton__Loader {
+  position: absolute;
+  margin-top: -30px;
+}
+
+.DonateButton__Loader--Once {
+  margin-left: 55px;
+}
+
+.DonateButton__Loader--Monthly {
+  margin-left: 115px;
+}

@@ -1,0 +1,24 @@
+@import '/src/donations/scss/modifiers.scss';
+@import '/src/donations/components/AmountsView.scss';
+
+.RecurrenceOption {
+  @apply no-underline uppercase tracking-wide;
+  @apply font-bold text-xs py-3;
+  @apply text-black-modest;
+  @apply bg-white;
+  width: 12.5rem;
+}
+
+.RecurrenceOption--selected {
+  @include __selected();
+}
+
+.RecurrenceOption--leftMost {
+  border-top-left-radius: 30px 50%;
+  border-bottom-left-radius: 30px 50%;
+}
+
+.RecurrenceOption--rightMost {
+  border-top-right-radius: 30px 50%;
+  border-bottom-right-radius: 30px 50%;
+}

@@ -1,0 +1,13 @@
+@import '/src/donations/scss/boxes.scss';
+@import '/src/donations/components/AmountsView.scss';
+
+.CurrencyPicker {
+  @include BigField();
+  @apply border-blue-200;
+  @apply w-32;
+
+  select {
+    @apply bg-transparent text-sm;
+    outline: 1px dashed transparent;
+  }
+}
