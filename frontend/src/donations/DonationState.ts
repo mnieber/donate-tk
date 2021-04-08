@@ -118,7 +118,12 @@ export class DonationState {
           const errorCode = data.error_code;
 
           this.isPaymentReceived = false;
+
+          // Treat INVALID_QUERY_PARAMS as an internal server error
           this.statusCode = error.status;
+          if (errorCode === 'INVALID_QUERY_PARAMS') {
+            this.statusCode = 500;
+          }
 
           if (
             errorCode === 'CARD_DECLINED' ||

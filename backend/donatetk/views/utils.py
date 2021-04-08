@@ -1,6 +1,7 @@
 import pydantic
 from django.http import JsonResponse, QueryDict
 
+from donatetk.schema import ErrorCodes
 from donatetk.stripe_backend import StripeBackend
 
 
@@ -25,9 +26,11 @@ def _parse(request_data, schema):
         error_response = JsonResponse(
             dict(
                 success=False,
-                data=dict(details=str(e)),
+                data=dict(
+                    error_code=ErrorCodes.INVALID_QUERY_PARAMS.name, details=str(e)
+                ),
             ),
-            status=500,
+            status=400,
         )
     return params, error_response
 

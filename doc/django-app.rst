@@ -32,6 +32,7 @@ It returns:
   - CARD_EXPIRED
   - ERROR_PROCESSING_CARD
   - AMOUNT_BELOW_MINIMUM (returned when the amount is below 1)
+  - INVALID_QUERY_PARAMS (query params are checked with pydantic)
   - UNKNOWN
 
 It uses the following steps:
