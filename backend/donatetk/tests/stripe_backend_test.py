@@ -50,14 +50,14 @@ class TestStripeBackend(object):
             amount=2.13,
             source=source,
             currency="usd",
-            description="designation: friends",
+            description="friends",
         )
         mock_api.Charge.create.assert_called_once_with(
             amount=213,
             currency="usd",
             customer="stripe_customer",
             source="source",
-            description="designation: friends",
+            description="friends",
         )
 
     def test_cancel_cards(self, mock_api):
@@ -96,7 +96,9 @@ class TestStripeBackend(object):
         customer = Mock()
         customer.id = "stripe_customer"
 
-        be.create_subscription_and_charge_card(customer, 2.13, "Quarterly", "usd")
+        be.create_subscription_and_charge_card(
+            customer, 2.13, "Quarterly", "usd", "friends"
+        )
         expected_plan_id = "donate_2.13_usd_every_3_months"
         mock_api.Plan.retrieve.assert_called_once_with(expected_plan_id)
         mock_api.Plan.create.assert_called_once_with(
@@ -106,6 +108,7 @@ class TestStripeBackend(object):
             interval_count=3,
             product="product_abc",
             currency="usd",
+            metadata={"description": "friends"},
         )
 
         item = Mock()
@@ -119,7 +122,9 @@ class TestStripeBackend(object):
         mock_api.Plan.retrieve.reset_mock()
         mock_api.Plan.create.reset_mock()
 
-        be.create_subscription_and_charge_card(customer, 2.13, "Quarterly", "usd")
+        be.create_subscription_and_charge_card(
+            customer, 2.13, "Quarterly", "usd", "friends"
+        )
         mock_api.Plan.retrieve.assert_called_once_with(expected_plan_id)
         mock_api.Plan.create.assert_not_called()
 

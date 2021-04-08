@@ -1,9 +1,8 @@
 -r requirements.txt
-callee
 django-extensions
 ipython
 pudb
 pytest
-pytest-django
+pytest-django==4.1.0
 pytest-html
 pytest-mock

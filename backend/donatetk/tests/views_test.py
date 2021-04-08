@@ -1,9 +1,9 @@
 import json
 from unittest.mock import MagicMock, Mock
 
-import callee
 import pytest
 from django.conf import settings
+from django.core import mail
 from rest_framework.test import APIClient
 from stripe.error import CardError
 
@@ -18,7 +18,7 @@ def _data(recurrence="Once"):
         stripe_token="stripe_token",
         recurrence=recurrence,
         currency="usd",
-        description="designation: friends",
+        description="friends",
     )
 
 
@@ -34,12 +34,7 @@ class TestViews(object):
     def client(self):
         return APIClient()
 
-    @pytest.fixture()
-    def mock_thread(self, mocker):
-        mock_thread = mocker.patch("threading.Thread")
-        return mock_thread
-
-    def test_create_donation_with_new_source(self, stripe_be, client, mock_thread):
+    def test_create_donation_with_new_source(self, stripe_be, client):
 
         new_source = Mock()
 
@@ -66,7 +61,7 @@ class TestViews(object):
             data={}, success=True
         )
 
-    def test_create_donation_with_existing_source(self, stripe_be, client, mock_thread):
+    def test_create_donation_with_existing_source(self, stripe_be, client):
         source = Mock()
         source.fingerprint = "fingerprint_0"
 
@@ -93,7 +88,7 @@ class TestViews(object):
             data={}, success=True
         )
 
-    def test_create_recurring_donation(self, stripe_be, client, mock_thread):
+    def test_create_recurring_donation(self, stripe_be, client):
         customer = Mock()
         customer.id = "stripe_customer_123"
         customer.sources = MagicMock()
@@ -103,31 +98,19 @@ class TestViews(object):
         response = client.post("/api/donations/", data)
 
         stripe_be.create_subscription_and_charge_card.assert_called_once_with(
-            customer, data["amount"], "Quarterly", "usd"
+            customer, data["amount"], "Quarterly", "usd", "friends"
         )
 
         assert json.loads(str(response.content, encoding="utf8")) == dict(
             data={}, success=True
         )
 
-    def test_send_receipt(self, stripe_be, client, mock_thread):
+    def test_send_receipt(self, stripe_be, client):
         customer = Mock()
         customer.id = "stripe_customer_123"
         customer.sources = MagicMock()
         stripe_be.get_or_create_customer_by_email.return_value = customer
 
+        assert len(mail.outbox) == 0
         client.post("/api/donations/", _data())
-
-        mock_thread.assert_called_once_with(
-            args=(
-                f"Your donation to {settings.DONATETK_ORG_NAME}",
-                "Thank you for your donation of 5 USD!",
-                "hallomaarten@yahoo.com",
-                ["email@org.com"],
-            ),
-            kwargs={
-                "html_message": "<div>\n<p>Thank you for your donation of 5 USD!</p></div>\n",
-                "fail_silently": True,
-            },
-            target=callee.general.Any(),
-        )
+        assert len(mail.outbox) == 1

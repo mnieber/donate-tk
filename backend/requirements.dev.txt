@@ -10,8 +10,6 @@ asgiref==3.3.1
     #   django
 attrs==20.3.0
     # via pytest
-callee==0.3.1
-    # via -r requirements.dev.in
 certifi==2020.12.5
     # via
     #   -r requirements.txt
@@ -65,7 +63,7 @@ pygments==2.7.4
     #   pudb
 pyparsing==2.4.7
     # via packaging
-pytest-django==3.1.2
+pytest-django==4.1.0
     # via -r requirements.dev.in
 pytest-html==3.1.1
     # via -r requirements.dev.in
