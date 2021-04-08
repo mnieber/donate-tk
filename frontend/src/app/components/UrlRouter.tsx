@@ -18,7 +18,7 @@ const options: OptionsT = {
     { code: 'ceva', name: 'Use for Center for Effective Vegan Advocacy' },
     { code: 'proveg', name: 'Use for ProVeg International' },
   ],
-  recurrenceOptions: ['Once', 'Monthly'],
+  recurrenceOptions: ['once', 'monthly'],
   minDonationAmountByCurrency: { usd: 5, eur: 5 },
   thankYouMessage: "We're doing our best to help the animals.",
   offerNewsLetter: false,

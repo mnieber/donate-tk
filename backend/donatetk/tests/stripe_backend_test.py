@@ -97,7 +97,7 @@ class TestStripeBackend(object):
         customer.id = "stripe_customer"
 
         be.create_subscription_and_charge_card(
-            customer, 2.13, "Quarterly", "usd", "friends"
+            customer, 2.13, "quarterly", "usd", "friends"
         )
         expected_plan_id = "donate_2.13_usd_every_3_months"
         mock_api.Plan.retrieve.assert_called_once_with(expected_plan_id)
@@ -123,7 +123,7 @@ class TestStripeBackend(object):
         mock_api.Plan.create.reset_mock()
 
         be.create_subscription_and_charge_card(
-            customer, 2.13, "Quarterly", "usd", "friends"
+            customer, 2.13, "quarterly", "usd", "friends"
         )
         mock_api.Plan.retrieve.assert_called_once_with(expected_plan_id)
         mock_api.Plan.create.assert_not_called()

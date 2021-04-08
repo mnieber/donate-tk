@@ -9,7 +9,7 @@ import './DonateButton.scss';
 export const DonateButton = observer(({ isSendingForm }: any) => {
   const formState = useFormStateContext();
   const donationState = useDonationState();
-  const postfix = formState.values.recurrence === 'Monthly' ? ' PER MONTH' : '';
+  const postfix = formState.values.recurrence === 'monthly' ? ' PER MONTH' : '';
   const currency = getCurrency(formState.values.currency);
 
   return (

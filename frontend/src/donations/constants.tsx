@@ -298,6 +298,6 @@ export const getCurrency = (currency: any) => {
 };
 
 export const getCurrencyStr = (currency: CurrencyT, recurrence: RecurrenceT) =>
-  currency.code.toUpperCase() + (recurrence === 'Monthly' ? ' / mo' : '');
+  currency.code.toUpperCase() + (recurrence === 'monthly' ? ' / mo' : '');
 
 export default Constants;

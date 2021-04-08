@@ -53,7 +53,7 @@ export function sendDonationForm(values: DonationValuesT, stripeToken: string) {
 
       error.responseJSON.data.error_msg =
         !errorCode && error.status === 500
-          ? ''
+          ? generalErrorMsg
           : errorCode === 'CARD_DECLINED'
           ? 'This card was declined. If possible, please use a different card'
           : errorCode === 'CVC_FAILED_VALIDATION'

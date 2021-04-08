@@ -61,6 +61,8 @@ into Beta phase.
 - Support PayPal
 - Improve the default colour scheme and design
 - Try it out in some real use-cases, collect feedback, improve.
+- Add a test for the DELETE request to DonationView
+- Add OpenAPI documentation
 
 ## Acknowledgement
 

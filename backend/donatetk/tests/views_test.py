@@ -8,9 +8,9 @@ from django.test import Client
 from stripe.error import CardError
 
 
-def _data(recurrence="Once"):
+def _data(recurrence="once"):
     return dict(
-        amount="5",
+        amount=5,
         email="email@org.com",
         first_name="Maarten",
         last_name="Nieber",
@@ -27,7 +27,12 @@ class TestViews(object):
     def stripe_be(self, mocker):
         mock = MagicMock()
         mock.api.error.CardError = CardError  # CardError should not be a mock
-        mocker.patch("donatetk.views._create_stripe_backend", return_value=mock)
+        mocker.patch(
+            "donatetk.views.donationsview._create_stripe_backend", return_value=mock
+        )
+        mocker.patch(
+            "donatetk.views.donationview._create_stripe_backend", return_value=mock
+        )
         return mock
 
     @pytest.fixture()
@@ -94,11 +99,11 @@ class TestViews(object):
         customer.sources = MagicMock()
         stripe_be.get_or_create_customer_by_email.return_value = customer
 
-        data = _data("Quarterly")
+        data = _data("quarterly")
         response = client.post("/api/donations/", data)
 
         stripe_be.create_subscription_and_charge_card.assert_called_once_with(
-            customer, data["amount"], "Quarterly", "usd", "friends"
+            customer, data["amount"], "quarterly", "usd", "friends"
         )
 
         assert json.loads(str(response.content, encoding="utf8")) == dict(

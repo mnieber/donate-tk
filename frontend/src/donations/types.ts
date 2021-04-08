@@ -1,4 +1,4 @@
-export type RecurrenceT = 'Once' | 'Monthly';
+export type RecurrenceT = 'once' | 'monthly';
 
 export type CarouselHeaderT = 'Amount' | 'CreditCard' | 'Address' | 'Finish';
 

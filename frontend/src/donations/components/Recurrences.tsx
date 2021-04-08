@@ -4,6 +4,9 @@ import classnames from 'classnames';
 
 import './Recurrences.scss';
 
+const titleCase = (x: string) =>
+  x.charAt(0).toUpperCase() + x.substr(1).toLowerCase();
+
 type RecurrencesPropsT = {
   recurrenceOptions: RecurrenceT[];
   style: any;
@@ -28,7 +31,7 @@ export function Recurrences(props: RecurrencesPropsT) {
             idx === props.recurrenceOptions.length - 1,
         })}
       >
-        {recurrence}
+        {titleCase(recurrence)}
       </button>
     );
   });

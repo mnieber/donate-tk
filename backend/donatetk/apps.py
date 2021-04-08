@@ -3,7 +3,8 @@ import sys
 from django.apps import AppConfig
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
-from donatetk.views import StripeBackend
+
+from donatetk.stripe_backend import StripeBackend
 
 
 class DonationTkConfig(AppConfig):

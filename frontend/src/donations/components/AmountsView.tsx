@@ -29,7 +29,7 @@ export const AmountsView: React.FC<PropsT> = observer((props: PropsT) => {
 
   const NextButton = (
     <button className={classnames('NextButton')} onClick={_next}>
-      {formState.values.recurrence === 'Monthly' ? 'DONATE MONTHLY' : 'DONATE'}
+      {formState.values.recurrence === 'monthly' ? 'DONATE MONTHLY' : 'DONATE'}
     </button>
   );
 

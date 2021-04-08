@@ -10,7 +10,7 @@ export const EditAmountLink = () => {
   const currency = getCurrency(formState.values.currency);
 
   const recurrence =
-    formState.values.recurrence === 'Monthly' ? ' per month' : '';
+    formState.values.recurrence === 'monthly' ? ' per month' : '';
   const link = (
     <button
       className={'underline self-center'}

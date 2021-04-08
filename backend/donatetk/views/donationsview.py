@@ -6,31 +6,17 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.core.signing import BadSignature
 from django.http import JsonResponse
-from django.utils.decorators import method_decorator
 from django.views import View
-from django.views.decorators.csrf import csrf_exempt
 
 from donatetk import signals
+from donatetk.schema import ErrorCodes, PostDonationParams
 from donatetk.stripe_backend import StripeBackend
-from donatetk.utils import get_post_data
-
-
-class ErrorCodes(Enum):
-    CARD_DECLINED = 1
-    ZIP_CODE_FAILED_VALIDATION = 2
-    CVC_FAILED_VALIDATION = 3
-    CARD_EXPIRED = 4
-    ERROR_PROCESSING_CARD = 5
-    AMOUNT_BELOW_MINIMUM = 6
-    UNKNOWN = 999
-
-
-def _to_100_cents_unit(amount):
-    return int(amount) / 100
-
-
-def _create_stripe_backend():
-    return StripeBackend()
+from donatetk.views.utils import (
+    _create_stripe_backend,
+    _parse,
+    _to_100_cents_unit,
+    get_post_data,
+)
 
 
 class DonationsView(View):
@@ -120,8 +106,11 @@ class DonationsView(View):
 
     def post(self, request):
         self.stripe_be = _create_stripe_backend()
+        params, error_response = _parse(request.POST.dict(), PostDonationParams)
+        if error_response:
+            return error_response
 
-        if int(self.request.POST["amount"]) < 1:
+        if int(params.amount) < 1:
             return JsonResponse(
                 dict(
                     success=False,
@@ -130,11 +119,10 @@ class DonationsView(View):
                 status=400,
             )
 
-        email = self.request.POST["email"]
-        stripe_customer = self.stripe_be.get_or_create_customer_by_email(email)
+        stripe_customer = self.stripe_be.get_or_create_customer_by_email(params.email)
 
         # get fingerprint of the posted credit card
-        token = self.stripe_be.api.Token.retrieve(request.POST["stripe_token"])
+        token = self.stripe_be.api.Token.retrieve(params.stripe_token)
         source = None
         for existing_source in stripe_customer.sources:
             if existing_source.fingerprint == token.card.fingerprint:
@@ -143,20 +131,20 @@ class DonationsView(View):
         # create new source if necessary
         try:
             source = source or stripe_customer.sources.create(
-                source=self.request.POST["stripe_token"]
+                source=params.stripe_token
             )
 
-            is_recurring = self.request.POST["recurrence"].lower() != "once"
+            is_recurring = params.recurrence.lower() != "once"
 
             if is_recurring:
                 # create a subscription for the next donations
                 # note that in this case no source should be indicated
                 subscription = self.stripe_be.create_subscription_and_charge_card(
                     stripe_customer,
-                    self.request.POST["amount"],
-                    self.request.POST["recurrence"],
-                    self.request.POST["currency"],
-                    self.request.POST["description"],
+                    params.amount,
+                    params.recurrence,
+                    params.currency,
+                    params.description,
                 )
                 signals.subscription_created.send(
                     self, customer=stripe_customer, subscription=subscription
@@ -165,10 +153,10 @@ class DonationsView(View):
                 # charge the customer's credit card
                 charge = self.stripe_be.create_charge(
                     stripe_customer,
-                    self.request.POST["amount"],
+                    params.amount,
                     source,
-                    self.request.POST["currency"],
-                    self.request.POST["description"],
+                    params.currency,
+                    params.description,
                 )
                 signals.charge_created.send(
                     self, customer=stripe_customer, charge=charge
@@ -199,9 +187,9 @@ class DonationsView(View):
         is_send_mail = getattr(settings, "DONATETK_SEND_RECEIPT_EMAIL", True)
         if is_send_mail:
             self._send_receipt(
-                email,
-                self.request.POST["amount"],
-                self.request.POST["currency"],
+                params.email,
+                params.amount,
+                params.currency,
                 [
                     x
                     for x in self.stripe_be.subscriptions_by_customer_id(
@@ -209,67 +197,6 @@ class DonationsView(View):
                     )
                     if x.status == "active"
                 ],
-            )
-
-        return JsonResponse(dict(success=True, data={}), status=200)
-
-
-@method_decorator(csrf_exempt, name="dispatch")
-class DonationView(View):
-    def delete(self, request, customer_id, subscription_id):
-        POST, _ = get_post_data(request)
-        stripe_be = _create_stripe_backend()
-        checksum = POST["checksum"]
-
-        try:
-            stripe_be.verify_checksum(checksum, customer_id, subscription_id)
-        except BadSignature:
-            return JsonResponse(status=400, reason="bad checksum")
-
-        subscriptions = stripe_be.subscriptions_by_customer_id(customer_id)
-
-        matching_subscriptions = [x for x in subscriptions if x.id == subscription_id]
-        if not len(matching_subscriptions):
-            return JsonResponse(status=404)
-
-        subscription = matching_subscriptions[0]
-        if subscription.status == "active":
-            subscription.delete()
-        else:
-            return JsonResponse(status=404, data={})
-
-        return JsonResponse(status=200, data={})
-
-
-# This view is intended as an example of how to set up the stripe webhook.
-# It does not do any useful work.
-@method_decorator(csrf_exempt, name="dispatch")
-class StripeWebhookView(View):
-    def post(self, request):
-        self.stripe_be = _create_stripe_backend()
-
-        payload = request.body
-        sig_header = request.META["HTTP_STRIPE_SIGNATURE"]
-        event = None
-
-        try:
-            event = self.stripe_be.api.Webhook.construct_event(
-                payload, sig_header, settings.DONATETK_STRIPE_ENDPOINT_SECRET
-            )
-        except ValueError:
-            return JsonResponse(status=400)
-        except self.stripe_be.api.error.SignatureVerificationError:
-            return JsonResponse(status=400)
-
-        stripe_object = event.data.object
-        if stripe_object.object == "charge":
-            is_refund = stripe_object.refunded == "true"
-            multiplier = -1 if is_refund else 1
-
-            signals.charge_received.send(
-                self,
-                total_amount=multiplier * _to_100_cents_unit(stripe_object.amount),
-                currency=stripe_object.currency.upper(),
             )
 
         return JsonResponse(dict(success=True, data={}), status=200)

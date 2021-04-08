@@ -14,7 +14,7 @@ type PropsT = {
 
 export const DonationFormView: React.FC<PropsT> = observer((props: PropsT) => {
   const initialValues = {
-    recurrence: 'Monthly',
+    recurrence: 'monthly',
     amount: 50,
     currency: 'usd',
     email: 'mnieber@gmail.com',

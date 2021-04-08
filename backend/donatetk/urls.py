@@ -9,5 +9,5 @@ urlpatterns = [
         r"^donation/(?P<customer_id>[^/]+)/(?P<subscription_id>[^/]+)/?",
         csrf_exempt(DonationView.as_view()),
     ),
-    re_path(r"^stripe-webhook/?", StripeWebhookView.as_view()),
+    re_path(r"^stripe-webhook/?", csrf_exempt(StripeWebhookView.as_view())),
 ]
