@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, Mock
 import pytest
 from django.conf import settings
 from django.core import mail
-from rest_framework.test import APIClient
+from django.test import Client
 from stripe.error import CardError
 
 
@@ -32,7 +32,7 @@ class TestViews(object):
 
     @pytest.fixture()
     def client(self):
-        return APIClient()
+        return Client()
 
     def test_create_donation_with_new_source(self, stripe_be, client):
 

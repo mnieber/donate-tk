@@ -35,7 +35,6 @@ INSTALLED_APPS = (
     [
         "corsheaders",
         "app",
-        "rest_framework",
         "donatetk.apps.DonationTkConfig",
     ]
     + (

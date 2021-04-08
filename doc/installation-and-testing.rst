@@ -49,7 +49,6 @@ Currently there is no pip package and you are expected to install the donatetk D
 by copying its directory directly into your Django project. Then you add the following packages
 to `settings.INSTALLED_APPS`:
 
-- rest_framework
 - donatetk.apps.DonationTkConfig
 
 

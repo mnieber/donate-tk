@@ -19,6 +19,7 @@ export class DonationState {
       goToAmountView: action,
       goFromAddressViewToCreditCardView: action,
       goFromAmountsViewToCreditCardView: action,
+      goFromCreditCardViewToAddressView: action,
       submitForm: action,
     });
   }
