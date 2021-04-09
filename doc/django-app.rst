@@ -1,5 +1,11 @@
 .. _django_app:
 
+Stripe testing keys
+===================
+
+Register at Stripe via https://stripe.com/register (it takes only
+a minute) and copy your test keys from the dashboard.
+
 The Django app
 ==============
 
@@ -89,7 +95,6 @@ Required Django settings
 - DONATETK_STRIPE_TEST_SECRET_KEY: The secret stripe key used in test mode
 - DONATETK_STRIPE_LIVE_PUBLIC_KEY: The public stripe key used in live mode
 - DONATETK_STRIPE_LIVE_SECRET_KEY: The secret stripe key used in live mode
-- DONATETK_STRIPE_ENDPOINT_SECRET: The stripe endpoint secret used in the StripeWebhookView example
 - DONATETK_STRIPE_LIVE_MODE: the flag that determines if live mode or test mode is used
 
 Optional Django settings
@@ -101,3 +106,4 @@ Optional Django settings
   string that may use amount, currency and org_name as template variables.
 - DONATETK_MAIL_MESSAGE: Similar to DONATETK_MAIL_SUBJECT, but contains the message body.
 - DONATETK_MAIL_HTML_MESSAGE: Similar to DONATETK_MAIL_SUBJECT, but contains the html message body.
+- DONATETK_STRIPE_ENDPOINT_SECRET: The stripe endpoint secret used in the StripeWebhookView example
