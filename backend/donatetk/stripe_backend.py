@@ -1,6 +1,5 @@
 import stripe
 from django.conf import settings
-from django.core.signing import Signer
 
 stripe.api_key = (
     settings.DONATETK_STRIPE_LIVE_SECRET_KEY
@@ -104,12 +103,3 @@ class StripeBackend:
         return self.api.Subscription.list(
             customer=stripe_customer_id, status="all"
         ).data
-
-    def checksum_from_subscription(self, subscription):
-        signer = Signer()
-        return signer.sign(subscription.customer + subscription.id).split(":")[1]
-
-    def verify_checksum(self, checksum, customer_id, subscription_id):
-        signer = Signer()
-        signed_value = ":".join([customer_id + subscription_id, checksum])
-        signer.unsign(signed_value)

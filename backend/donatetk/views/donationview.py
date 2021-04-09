@@ -4,19 +4,21 @@ from django.http import JsonResponse
 from django.views import View
 
 from donatetk.schema import DeleteDonationParams
-from donatetk.views.utils import _create_stripe_backend, _parse, get_post_data
+from donatetk.utils.checksum import verify_checksum
+from donatetk.utils.requests import get_post_data, parse_params
+from donatetk.views.utils import create_stripe_backend
 
 
 class DonationView(View):
     def delete(self, request, customer_id, subscription_id):
-        stripe_be = _create_stripe_backend()
+        stripe_be = create_stripe_backend()
         POST, _ = get_post_data(request)
-        params, error_response = _parse(POST.dict(), DeleteDonationParams)
+        params, error_response = parse_params(POST.dict(), DeleteDonationParams)
         if error_response:
             return error_response
 
         try:
-            stripe_be.verify_checksum(params.checksum, customer_id, subscription_id)
+            verify_checksum(params.checksum, customer_id, subscription_id)
         except BadSignature:
             return JsonResponse(status=400, reason="bad checksum")
 

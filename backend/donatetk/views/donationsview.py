@@ -11,12 +11,10 @@ from django.views import View
 from donatetk import signals
 from donatetk.schema import ErrorCodes, PostDonationParams
 from donatetk.stripe_backend import StripeBackend
-from donatetk.views.utils import (
-    _create_stripe_backend,
-    _parse,
-    _to_100_cents_unit,
-    get_post_data,
-)
+from donatetk.utils.checksum import checksum_from_subscription
+from donatetk.utils.money import to_100_cents_unit
+from donatetk.utils.requests import get_post_data, parse_params
+from donatetk.views.utils import create_stripe_backend
 
 
 class DonationsView(View):
@@ -25,7 +23,7 @@ class DonationsView(View):
         interval_count = subscription.plan.interval_count
         interval = months_to_interval[interval_count]
 
-        amount = _to_100_cents_unit(subscription.plan.amount)
+        amount = to_100_cents_unit(subscription.plan.amount)
         currency = subscription.plan.currency
         when = datetime.fromtimestamp(subscription.start).strftime("%A %d. %B %Y")
 
@@ -90,7 +88,7 @@ class DonationsView(View):
         )
 
     def _cancel_donation_link(self, subscription, currency, amount, interval):
-        checksum = self.stripe_be.checksum_from_subscription(subscription)
+        checksum = checksum_from_subscription(subscription)
         return (
             "{host}/donate/cancel/{customer_id}/{subscription_id}/"
             + "?checksum={checksum}&amount={amount}&currency={currency}&interval={interval}"
@@ -105,8 +103,8 @@ class DonationsView(View):
         )
 
     def post(self, request):
-        self.stripe_be = _create_stripe_backend()
-        params, error_response = _parse(request.POST.dict(), PostDonationParams)
+        self.stripe_be = create_stripe_backend()
+        params, error_response = parse_params(request.POST.dict(), PostDonationParams)
         if error_response:
             return error_response
 

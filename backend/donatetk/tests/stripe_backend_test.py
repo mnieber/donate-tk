@@ -4,6 +4,7 @@ import pytest
 from django.conf import settings
 
 from donatetk.stripe_backend import StripeBackend
+from donatetk.utils.checksum import checksum_from_subscription, verify_checksum
 
 
 class TestStripeBackend(object):
@@ -146,14 +147,14 @@ class TestStripeBackend(object):
         subscription.id = "id"
 
         assert (
-            be.checksum_from_subscription(subscription)
+            checksum_from_subscription(subscription)
             == "s5O9YfdHv9L6Nw9pH9eZOaiJlYMQSDfk25IbdkVeMzY"
         )
 
         with pytest.raises(Exception):
-            be.verify_checksum("123", "customer", "id")
+            verify_checksum("123", "customer", "id")
 
         try:
-            be.verify_checksum("gOkRmgSLPCHdDB4UW4CptrFCHXE", "customer", "id")
+            verify_checksum("gOkRmgSLPCHdDB4UW4CptrFCHXE", "customer", "id")
         except:
             pytest.fail("Verify checksum should not throw")

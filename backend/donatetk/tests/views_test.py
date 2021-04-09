@@ -28,10 +28,10 @@ class TestViews(object):
         mock = MagicMock()
         mock.api.error.CardError = CardError  # CardError should not be a mock
         mocker.patch(
-            "donatetk.views.donationsview._create_stripe_backend", return_value=mock
+            "donatetk.views.donationsview.create_stripe_backend", return_value=mock
         )
         mocker.patch(
-            "donatetk.views.donationview._create_stripe_backend", return_value=mock
+            "donatetk.views.donationview.create_stripe_backend", return_value=mock
         )
         return mock
 
@@ -99,6 +99,10 @@ class TestViews(object):
         customer.sources = MagicMock()
         stripe_be.get_or_create_customer_by_email.return_value = customer
 
+        subscription = Mock()
+        customer.id = "stripe_subscription_123"
+        stripe_be.create_subscription_and_charge_card.return_value = subscription
+
         data = _data("quarterly")
         response = client.post("/api/donations/", data)
 
@@ -109,6 +113,8 @@ class TestViews(object):
         assert json.loads(str(response.content, encoding="utf8")) == dict(
             data={}, success=True
         )
+
+        checksum =
 
     def test_send_receipt(self, stripe_be, client):
         customer = Mock()

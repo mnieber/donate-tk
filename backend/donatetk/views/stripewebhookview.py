@@ -3,14 +3,15 @@ from django.http import JsonResponse
 from django.views import View
 
 from donatetk import signals
-from donatetk.views.utils import _create_stripe_backend, _to_100_cents_unit
+from donatetk.utils.money import to_100_cents_unit
+from donatetk.views.utils import create_stripe_backend
 
 
 # This view is intended as an example of how to set up the stripe webhook.
 # It does not do any useful work.
 class StripeWebhookView(View):
     def post(self, request):
-        self.stripe_be = _create_stripe_backend()
+        self.stripe_be = create_stripe_backend()
 
         payload = request.body
         sig_header = request.META["HTTP_STRIPE_SIGNATURE"]
@@ -32,7 +33,7 @@ class StripeWebhookView(View):
 
             signals.charge_received.send(
                 self,
-                total_amount=multiplier * _to_100_cents_unit(stripe_object.amount),
+                total_amount=multiplier * to_100_cents_unit(stripe_object.amount),
                 currency=stripe_object.currency.upper(),
             )
 
