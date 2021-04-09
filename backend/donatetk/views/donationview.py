@@ -12,8 +12,8 @@ from donatetk.views.utils import create_stripe_backend
 class DonationView(View):
     def delete(self, request, customer_id, subscription_id):
         stripe_be = create_stripe_backend()
-        POST, _ = get_post_data(request)
-        params, error_response = parse_params(POST.dict(), DeleteDonationParams)
+        post_data = get_post_data(request)
+        params, error_response = parse_params(post_data, DeleteDonationParams)
         if error_response:
             return error_response
 

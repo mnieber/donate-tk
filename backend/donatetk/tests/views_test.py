@@ -1,4 +1,5 @@
 import json
+import os
 from unittest.mock import MagicMock, Mock
 
 import pytest
@@ -6,6 +7,8 @@ from django.conf import settings
 from django.core import mail
 from django.test import Client
 from stripe.error import CardError
+
+from donatetk.utils.checksum import checksum_from_subscription
 
 
 def _data(recurrence="once"):
@@ -100,11 +103,20 @@ class TestViews(object):
         stripe_be.get_or_create_customer_by_email.return_value = customer
 
         subscription = Mock()
-        customer.id = "stripe_subscription_123"
+        subscription.id = "stripe_subscription_123"
+        subscription.status = "active"
+        subscription.start = 0
+        subscription.customer = customer
+        subscription.plan.interval_count = 3
+        subscription.plan.amount = 2000
+        subscription.plan.currency = "usd"
         stripe_be.create_subscription_and_charge_card.return_value = subscription
+        stripe_be.subscriptions_by_customer_id.return_value = [subscription]
 
         data = _data("quarterly")
+        assert len(mail.outbox) == 0
         response = client.post("/api/donations/", data)
+        assert len(mail.outbox) == 1
 
         stripe_be.create_subscription_and_charge_card.assert_called_once_with(
             customer, data["amount"], "quarterly", "usd", "friends"
@@ -114,14 +126,24 @@ class TestViews(object):
             data={}, success=True
         )
 
-        checksum =
+        checksum = checksum_from_subscription(subscription)
+        link = os.path.join(
+            settings.DONATETK_WEBPAGE_HOST,
+            "donate",
+            "cancel",
+            customer.id,
+            subscription.id,
+            f"?checksum={checksum}&amount=20.0&currency=usd&interval=quarter",
+        )
 
-    def test_send_receipt(self, stripe_be, client):
-        customer = Mock()
-        customer.id = "stripe_customer_123"
-        customer.sources = MagicMock()
-        stripe_be.get_or_create_customer_by_email.return_value = customer
+        html_message = mail.outbox[0].message().get_payload()[1].as_string()
+        assert link in html_message
 
-        assert len(mail.outbox) == 0
-        client.post("/api/donations/", _data())
-        assert len(mail.outbox) == 1
+        url = os.path.join("/api/donation", customer.id, subscription.id)
+        response = client.put(
+            url,
+            dict(checksum=checksum),
+            REQUEST_METHOD="DELETE",
+            content_type="application/json",
+        )
+        subscription.delete.assert_called_once()

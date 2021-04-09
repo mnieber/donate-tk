@@ -94,7 +94,7 @@ class DonationsView(View):
             + "?checksum={checksum}&amount={amount}&currency={currency}&interval={interval}"
         ).format(
             host=settings.DONATETK_WEBPAGE_HOST,
-            customer_id=subscription.customer,
+            customer_id=subscription.customer.id,
             subscription_id=subscription.id,
             checksum=checksum,
             amount=amount,

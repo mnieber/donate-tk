@@ -141,20 +141,26 @@ class TestStripeBackend(object):
         )
 
     def test_checksum_from_subscription(self):
-        be = StripeBackend()
+        customer = Mock()
+        customer.id = "customer_id"
+
         subscription = Mock()
-        subscription.customer = "customer"
-        subscription.id = "id"
+        subscription.id = "subscription_id"
+        subscription.customer = customer
 
         assert (
             checksum_from_subscription(subscription)
-            == "s5O9YfdHv9L6Nw9pH9eZOaiJlYMQSDfk25IbdkVeMzY"
+            == "bjjq934TMFTxZKj863KfpEwJ43FHUeKjda3XWQk22Kc"
         )
 
         with pytest.raises(Exception):
-            verify_checksum("123", "customer", "id")
+            verify_checksum("123", "customer", "subscription_id")
 
         try:
-            verify_checksum("gOkRmgSLPCHdDB4UW4CptrFCHXE", "customer", "id")
+            verify_checksum(
+                "bjjq934TMFTxZKj863KfpEwJ43FHUeKjda3XWQk22Kc",
+                customer.id,
+                subscription.id,
+            )
         except:
-            pytest.fail("Verify checksum should not throw")
+            pytest.fail("Verify checksum should not throw on correct checksum")

@@ -1,3 +1,5 @@
+import json
+
 import pydantic
 from django.http import JsonResponse, QueryDict
 
@@ -6,15 +8,16 @@ from donatetk.schema import ErrorCodes
 
 def get_post_data(request):
     method = request.META.get("REQUEST_METHOD", "").upper()
-    POST = None
-    FILES = None
     if method in ["PUT", "DELETE"]:
         content_type = request.META.get("CONTENT_TYPE", "")
         if content_type.startswith("multipart"):
-            POST, FILES = request.parse_multipart(request.META, request)
+            POST, _ = request.parse_multipart(request.META, request)
+            return POST
         elif content_type.startswith("application/x-www-form-urlencoded"):
-            POST = QueryDict(request.body, encoding=request._encoding)
-    return POST, FILES
+            return QueryDict(request.body, encoding=request._encoding).dict()
+        elif content_type.startswith("application/json"):
+            return json.loads(request.body.decode("UTF-8"))
+    return None
 
 
 def parse_params(request_data, schema):
