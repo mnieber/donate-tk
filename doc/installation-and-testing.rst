@@ -4,8 +4,9 @@ Installation and testing
 ========================
 
 The DonateTk project comes with `docker-compose` files that allow you to try it out.
-To use it in your own project you should copy the DonateTk files into your project and
-if necessary adapt them to your needs.
+To use the DonateTk Django app you should copy it into your django project. To use the React
+app, you should copy the `frontend/src/donations` directory into your React project and
+adapt it to your needs.
 
 
 Trying out DonateTk
@@ -46,10 +47,8 @@ Installing the Django app
 -------------------------
 
 Currently there is no pip package and you are expected to install the donatetk Django app
-by copying its directory directly into your Django project. Then you add the following packages
-to `settings.INSTALLED_APPS`:
-
-- donatetk.apps.DonationTkConfig
+by copying its directory directly into your Django project. Then you add
+`donatetk.apps.DonationTkConfig` to `settings.INSTALLED_APPS`.
 
 
 Installing the React app

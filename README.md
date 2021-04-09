@@ -23,10 +23,9 @@ into Beta phase.
 
 ## Documentation
 
-- [Introduction](https://github.com/mnieber/donate-tk/blob/1897c5f65606876bed42ed43b30509985aee7de1/doc/introduction.rst)
-- [Installation and testing](https://github.com/mnieber/donate-tk/blob/1897c5f65606876bed42ed43b30509985aee7de1/doc/installation-and-testing.rst)
-- [The Django app](https://github.com/mnieber/donate-tk/blob/1897c5f65606876bed42ed43b30509985aee7de1/doc/django-app.rst)
-- [The React app](https://github.com/mnieber/donate-tk/blob/1897c5f65606876bed42ed43b30509985aee7de1/doc/react-app.rst)
+- [Installation and testing](doc/installation-and-testing.rst)
+- [The Django app](doc/django-app.rst)
+- [The React app](doc/react-app.rst)
 
 ## Features
 
@@ -42,19 +41,19 @@ into Beta phase.
 
 ### The Amounts view
 
-![alt text](https://github.com/mnieber/donate-tk/blob/abdb8e8fe288256b002c489d65787fb287a2c2a8/doc/img/AmountsView.png)
+![alt text](doc/img/AmountsView.png)
 
 ### The CreditCard view
 
-![alt text](https://github.com/mnieber/donate-tk/blob/abdb8e8fe288256b002c489d65787fb287a2c2a8/doc/img/CreditCardView.png)
+![alt text](doc/img/CreditCardView.png)
 
 ### The Address view
 
-![alt text](https://github.com/mnieber/donate-tk/blob/abdb8e8fe288256b002c489d65787fb287a2c2a8/doc/img/AddressView.png)
+![alt text](doc/img/AddressView.png)
 
 ### The Finish view
 
-![alt text](https://github.com/mnieber/donate-tk/blob/abdb8e8fe288256b002c489d65787fb287a2c2a8/doc/img/FinishView.png)
+![alt text](doc/img/FinishView.png)
 
 ## Roadmap
 

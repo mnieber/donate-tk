@@ -37,40 +37,54 @@ as inspiration only.
 The api.ts module
 -----------------
 
-This module receives the validated form values. It contains these functions:
+This module receives the validated form values.
 
-- getStripeToken. This function uses the following form values: firstName, lastName,
+Functions
+~~~~~~~~~
+
+* getStripeToken. This function uses the following form values: firstName, lastName,
   creditCardNumber, creditCardSecurityCode, creditCardExpireMonth and creditCardExpireYear.
   It returns a stripe token.
 
-- sendDonationForm. This function sends the donation form (and the stripe token) to the backend.
+* sendDonationForm. This function sends the donation form (and the stripe token) to the backend.
   It uses the following form values: email, amount, currency, recurrence and description,
 
-- cancelDonation. This function cancels a recurring donation. It takes the customerId,
+* cancelDonation. This function cancels a recurring donation. It takes the customerId,
   subscriptionId and checksum (see UrlRouter above) as its arguments.
 
 
 The validation.ts module
 -----------------
 
-This module contains functions that check the validatity of the various form fields. It also contains
-a `handleValidate` function that can be used in the `FormStateProvider`.
+This module is used to check the validatity of the various form fields.
+
+Functions
+~~~~~~~~~
+
+* `handleValidate`: a validation function that can be used in the `FormStateProvider`.
 
 
 The DonationState.ts module
 ---------------------------
 
-This module defines the `DonationState` that has following fields:
+This module defines the `DonationState`.
 
-- carouselHeader: the current sub-view within the `DonationFormView`
-- isSendingForm
-- isPaymentReceived (set to true if the donation was successfully processed by the backend)
-- statusCode (the status code returned by the backend)
+Fields
+~~~~~~
 
-In addition, this class has functions to change the current carouselHeader (performing partial
-validation of the form, based on the fields that are expected to be filled out at that point).
-Finally, it has a `submitForm` function that sends the donation form values to the backend and
-updates the donation state based on the response.
+* carouselHeader: the current sub-view within the `DonationFormView`
+* isSendingForm
+* isPaymentReceived (set to true if the donation was successfully processed by the backend)
+* statusCode (the status code returned by the backend)
+
+Functions
+~~~~~~~~~
+
+- goFrom<Some>ViewTo<SomeOther>View. These are functions that change the current carouselHeader.
+  Depending on the transition, it may perform partial validation of the form, based on the fields that are
+  expected to be filled out at that point.
+- `submitForm`. This is a function that sends the donation form values to the backend and
+  updates the donation state based on the response.
 
 
 The useDonationState.ts module
