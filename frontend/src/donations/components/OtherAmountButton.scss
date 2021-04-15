@@ -1,9 +1,8 @@
+@import '/src/donations/components/components.scss';
 @import '/src/donations/scss/modifiers.scss';
-@import '/src/donations/scss/boxes.scss';
 
 .OtherAmountButton {
-  @include BigField();
-  @apply border-blue-200;
+  @include DonationsBigField();
 
   input {
     @apply h-full;

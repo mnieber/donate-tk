@@ -1,0 +1,17 @@
+@import '/src/donations/scss/boxes.scss';
+
+@mixin DonationsBigField {
+  @include BigField();
+  @apply border-blue-200;
+}
+
+@mixin DonationsBigField {
+  @include BigField();
+  @apply border-blue-200;
+}
+
+@mixin DonationsButton {
+  @include BigButton();
+  @apply bg-white text-blue-300 border-blue-200;
+  @apply font-bold text-xl;
+}
