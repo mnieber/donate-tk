@@ -27,7 +27,6 @@ class StripeBackend:
         return self.api.Customer.create(email=email)
 
     def get_customer_by_id(self, customer_id):
-        # get or create stripe customer with this email
         return self.api.Customer.retrieve(customer_id)
 
     def _cents(self, amount):
