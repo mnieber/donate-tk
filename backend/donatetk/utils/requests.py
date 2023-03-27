@@ -8,7 +8,7 @@ from donatetk.schema import ErrorCodes
 
 def get_post_data(request):
     method = request.META.get("REQUEST_METHOD", "").upper()
-    if method in ["PUT", "DELETE"]:
+    if method in ["POST", "PUT", "DELETE"]:
         content_type = request.META.get("CONTENT_TYPE", "")
         if content_type.startswith("multipart"):
             POST, _ = request.parse_multipart(request.META, request)
